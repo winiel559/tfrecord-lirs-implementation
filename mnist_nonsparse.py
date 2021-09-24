@@ -163,8 +163,8 @@ def next_batch_TF(q, example_list, notTail, batch_size=BATCH_SIZE):
         example_batch.append(example)
         label_batch.append(label)
 
-    # example_batch = np.array(example_batch).astype(np.float32)
-    # label_batch = np.array(label_batch).astype(np.int32)
+    example_batch = np.array(example_batch).astype(np.float32)
+    label_batch = np.array(label_batch).astype(np.int32)
 
     return example_batch, label_batch
 
