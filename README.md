@@ -5,10 +5,14 @@ With a higher degree of randomness, the model converges faster and achieves high
 You can find a list of all functions we implement [in this PDF](https://github.com/winiel559/tfrecord-lirs-implementation/blob/main/tfrecord-lirs-implementation.pdf).
 
 ## How to use
-Generally speaking, we need to construct a TFRecord file from raw data first.   
-After that, we can use the TFRecord file to train the model.  
-Using our implementation in both parts enables full-range random shuffling with TFRecord format.  
+There are two steps to use a TFRecord file:  
+* Constructing a TFRecord file from raw data.   
+* Using the TFRecord file to train the model.  
+Using our implementation in both steps enables full-range random shuffling with TFRecord format.  
   
-We show an example of either part.  
-The construction of TFRecord is a little cumbersome
-
+We show an example of either step.  
+* The construction of TFRecord is a little cumbersome, so it's shown step-by-step in the example. Before using it, you need to download [the MNIST dataset](http://yann.lecun.com/exdb/mnist/).
+* After constructing the TFRecord file, you can start training by the following command.
+```console
+foo@bar:~$ python mnist_sparse_class.py [] [] []
+```
