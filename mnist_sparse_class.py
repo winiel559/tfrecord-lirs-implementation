@@ -1,3 +1,5 @@
+# This version only supports padding with page_assign, not pure page_assign
+
 import tensorflow as tf
 import numpy as np
 import time
@@ -7,11 +9,15 @@ import sys
 import struct
 import threading
 from queue import Queue
-
 from TFRecordLIRS import TFRecordLIRS
+
 # Define parameters
-# DATA_DIR = "/home/xpoint/TensorFlow/ImageNet/imagenet_1280K/"
-DATA_DIR = "./"
+
+
+PAGE_ASSIGN = sys.argv[1]
+TFR_DIR = sys.argv[2]
+OFT_DIR = sys.argv[3]
+
 NUM_INSTANCE = 60000  # 1281152  #1281167
 NUM_THREADS = 1
 BATCH_SIZE = 200
@@ -51,7 +57,6 @@ def next_batch(q, batch_size=BATCH_SIZE):
 
 
 def Create_threads(train_dataset, NUM_INSTANCE, q):
-
     threads = []
     for i in range(NUM_THREADS):
         t = threading.Thread(target=enqueue,
@@ -104,22 +109,14 @@ if __name__ == '__main__':
     image_feature_description = {
         'label': tf.io.FixedLenFeature([], tf.string),
         'image': tf.io.FixedLenFeature([], tf.string),
-    }
+    }    
 
-    train_dataset = TFRecordLIRS(image_feature_description, DATA_DIR +
-                                 "mnist_sparse.tfrecords", DATA_DIR + "mnist-sparse-offset_table", NUM_INSTANCE)
+    train_dataset = TFRecordLIRS(image_feature_description, TFR_DIR, OFT_DIR, NUM_INSTANCE)
 
     # Create a queue with size Q_MAXSIZE to buffer the training data
     q = Queue(maxsize=Q_MAXSIZE)
 
-    # Create the training file list
-    """
-    dataset_list = []
-    oft_list = []
-    for i in range(1):
-        dataset_list.append(DATA_DIR + "mnist_sparse.tfrecords")
-        oft_list.append(DATA_DIR + "mnist-sparse-offset_table")
-    """
+
     # Reader threads list
     threads = []
 
@@ -131,13 +128,13 @@ if __name__ == '__main__':
     traintime = 0
     startTime = time.time()
 
-    train_dataset.shuffle_order()
+    train_dataset.shuffle_order(PAGE_ASSIGN)
 
     # Start training
     for i in range(MAX_EPOCH):
         # If the mode is RANDOM_SHUFFLE, shuffle the training order list first
         if RANDOM_SHUFFLE:
-            train_dataset.shuffle_order()
+            train_dataset.shuffle_order(PAGE_ASSIGN)
 
         # Create threads(Readers) to read the training data
         threads = Create_threads(
