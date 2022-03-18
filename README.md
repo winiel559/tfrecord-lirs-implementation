@@ -15,5 +15,5 @@ We show an example of either step.
 * The construction of TFRecord is a little cumbersome, so it's shown step-by-step in the example. Before using it, you need to download [the MNIST dataset](http://yann.lecun.com/exdb/mnist/).
 * After constructing the TFRecord file, start training with the following command.
 ```console
-foo@bar:~$ python mnist_sparse_class.py [] [] []
+foo@bar:~$ python mnist_sparse_class.py [Use Page_Aware=1 or not=0] [TFRecord dir.] [OffsetTable dir.]
 ```
